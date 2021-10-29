@@ -21,15 +21,21 @@ async function run() {
         await client.connect();
         const database = client.db("food_delivery");
         const foodCollection = database.collection("foodDelivery");
-        
+        const deliveryManCollection = database.collection("deliveryMan");
 
         // GET foods api
         app.get('/foods', async (req, res) => {
             const cursor = await foodCollection.find({});
             const foods = await cursor.toArray()
             res.send(foods);
-            // console.log(result);
-        })
+        });
+
+        // GET delivery man api
+        app.get('/delivery', async (req, res) => {
+            const cursor = await deliveryManCollection.find({});
+            const deliveryman = await cursor.toArray()
+            res.send(deliveryman);
+        });
 
     } finally {
         // await client.close();
