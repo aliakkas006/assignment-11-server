@@ -1,7 +1,8 @@
 const express = require('express');
 const { MongoClient } = require('mongodb');
-var cors = require('cors');
+const cors = require('cors');
 require('dotenv').config();
+const ObjectId = require('mongodb').ObjectId;
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -20,8 +21,10 @@ async function run() {
     try {
         await client.connect();
         const database = client.db("food_delivery");
+
         const foodCollection = database.collection("foodDelivery");
         const deliveryManCollection = database.collection("deliveryMan");
+        const orderCollection = database.collection("order");
 
         // GET foods api
         app.get('/foods', async (req, res) => {
@@ -35,6 +38,26 @@ async function run() {
             const cursor = await deliveryManCollection.find({});
             const deliveryman = await cursor.toArray()
             res.send(deliveryman);
+        });
+
+        // POST order api
+        app.post('/addOrder', async (req, res) => {
+            const order = req.body;
+            const result = await orderCollection.insertOne(order);
+            console.log(result);
+            res.send(result);
+        });
+
+        // GET all order
+        app.get('/order', async (req, res) => {
+            const result = await orderCollection.find({}).toArray();
+            res.send(result);
+        });
+
+        // DELETE specific document
+        app.delete('/order/:id', async (req, res) => {
+            const result = await orderCollection.deleteOne({ _id: ObjectId(req.params.id) });
+            res.send(result);
         });
 
     } finally {
