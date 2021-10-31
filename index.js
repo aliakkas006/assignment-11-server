@@ -13,7 +13,7 @@ app.use(express.json());
 
 // connect with mongodb
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.muank.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
-
+// console.log(uri);
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
 // connect with node mongo server
@@ -25,7 +25,7 @@ async function run() {
         const foodCollection = database.collection("foodDelivery");
         const deliveryManCollection = database.collection("deliveryMan");
         const orderCollection = database.collection("order");
-        const foodCollection = database.collection("food");
+        const newFoodCollection = database.collection("food");
 
         // GET foods api
         app.get('/foods', async (req, res) => {
@@ -50,7 +50,7 @@ async function run() {
 
         // POST add new food api
         app.post('/addFood', async (req, res) => {
-            const result = await foodCollection.insertOne(req.body);
+            const result = await newFoodCollection.insertOne(req.body);
             res.send(result);
         })
 
