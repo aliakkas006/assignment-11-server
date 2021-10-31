@@ -25,6 +25,7 @@ async function run() {
         const foodCollection = database.collection("foodDelivery");
         const deliveryManCollection = database.collection("deliveryMan");
         const orderCollection = database.collection("order");
+        const foodCollection = database.collection("food");
 
         // GET foods api
         app.get('/foods', async (req, res) => {
@@ -44,9 +45,14 @@ async function run() {
         app.post('/addOrder', async (req, res) => {
             const order = req.body;
             const result = await orderCollection.insertOne(order);
-            console.log(result);
             res.send(result);
         });
+
+        // POST add new food api
+        app.post('/addFood', async (req, res) => {
+            const result = await foodCollection.insertOne(req.body);
+            res.send(result);
+        })
 
         // GET all order
         app.get('/order', async (req, res) => {
